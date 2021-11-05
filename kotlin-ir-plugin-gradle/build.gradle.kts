@@ -19,11 +19,11 @@ buildConfig {
 
 gradlePlugin {
   plugins {
-    create("kotlinIrPluginTemplate") {
+    create("zakadabarKotlinIrPlugin") {
       id = rootProject.extra["kotlin_plugin_id"] as String
-      displayName = "Kotlin Ir Plugin Template"
-      description = "Kotlin Ir Plugin Template"
-      implementationClass = "com.bnorm.template.TemplateGradlePlugin"
+      displayName = "Zakadabar Korlin Ir Plugin"
+      description = "Zakadabar Kotlin Ir Plugin"
+      implementationClass = "zakadabar.kotlin.compiler.plugin.TemplateGradlePlugin"
     }
   }
 }

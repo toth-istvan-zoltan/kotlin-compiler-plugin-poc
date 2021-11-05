@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bnorm.template
+package zakadabar.kotlin.compiler.plugin
 
 import com.google.auto.service.AutoService
 import org.jetbrains.kotlin.compiler.plugin.AbstractCliOption
@@ -22,9 +22,10 @@ import org.jetbrains.kotlin.compiler.plugin.CliOption
 import org.jetbrains.kotlin.compiler.plugin.CommandLineProcessor
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.CompilerConfigurationKey
+import zakadabar.poc.BuildConfig
 
 @AutoService(CommandLineProcessor::class)
-class TemplateCommandLineProcessor : CommandLineProcessor {
+class ZakadabarCommandLineProcessor : CommandLineProcessor {
   companion object {
     private const val OPTION_STRING = "string"
     private const val OPTION_FILE = "file"

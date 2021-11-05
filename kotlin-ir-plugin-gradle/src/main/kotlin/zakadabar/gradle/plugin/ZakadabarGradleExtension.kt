@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.bnorm.template
+package zakadabar.gradle.plugin
 
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
 
-open class TemplateGradleExtension(objects: ObjectFactory) {
+open class ZakadabarGradleExtension(objects: ObjectFactory) {
   val stringProperty: Property<String> = objects.property(String::class.java)
   val fileProperty: RegularFileProperty = objects.fileProperty()
 }

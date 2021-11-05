@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bnorm.template
+package zakadabar.gradle.plugin
 
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
@@ -22,10 +22,11 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilerPluginSupportPlugin
 import org.jetbrains.kotlin.gradle.plugin.SubpluginArtifact
 import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
+import zakadabar.poc.BuildConfig
 
-class TemplateGradlePlugin : KotlinCompilerPluginSupportPlugin {
+class ZakadabarGradlePlugin : KotlinCompilerPluginSupportPlugin {
   override fun apply(target: Project): Unit = with(target) {
-    extensions.create("template", TemplateGradleExtension::class.java)
+    extensions.create("zakadabar", ZakadabarGradleExtension::class.java)
   }
 
   override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean = true
@@ -48,7 +49,7 @@ class TemplateGradlePlugin : KotlinCompilerPluginSupportPlugin {
     kotlinCompilation: KotlinCompilation<*>
   ): Provider<List<SubpluginOption>> {
     val project = kotlinCompilation.target.project
-    val extension = project.extensions.getByType(TemplateGradleExtension::class.java)
+    val extension = project.extensions.getByType(ZakadabarGradleExtension::class.java)
     return project.provider {
       listOf(
         SubpluginOption(key = "string", value = extension.stringProperty.get()),
