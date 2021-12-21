@@ -26,32 +26,32 @@ import org.jetbrains.kotlin.resolve.DescriptorUtils
 import org.jetbrains.kotlin.resolve.checkers.DeclarationChecker
 import org.jetbrains.kotlin.resolve.checkers.DeclarationCheckerContext
 import org.jetbrains.kotlin.resolve.descriptorUtil.getSuperClassOrAny
-import zakadabar.kotlin.compiler.plugin.diagnostics.ErrorsNoArg.*
+import zakadabar.kotlin.compiler.plugin.diagnostics.ErrorsSdcp.*
 
-internal class CliNoArgDeclarationChecker(
-    private val noArgAnnotationFqNames: List<String>,
-    useIr: Boolean,
-) : AbstractNoArgDeclarationChecker(useIr) {
-    override fun getAnnotationFqNames(modifierListOwner: KtModifierListOwner?): List<String> = noArgAnnotationFqNames
-}
+internal class SdcpDeclarationChecker(
+    private val sdcpAnnotationFqNames: List<String>,
+    private val useIr: Boolean
+) : DeclarationChecker, AnnotationBasedExtension {
 
-abstract class AbstractNoArgDeclarationChecker(private val useIr: Boolean) : DeclarationChecker, AnnotationBasedExtension {
+    override fun getAnnotationFqNames(modifierListOwner: KtModifierListOwner?): List<String> =
+        sdcpAnnotationFqNames
+
     override fun check(declaration: KtDeclaration, descriptor: DeclarationDescriptor, context: DeclarationCheckerContext) {
         if (descriptor !is ClassDescriptor || declaration !is KtClass) return
         if (descriptor.kind != ClassKind.CLASS) return
         if (!descriptor.hasSpecialAnnotation(declaration)) return
 
         if (descriptor.isInner) {
-            val diagnostic = if (useIr) NOARG_ON_INNER_CLASS_ERROR else NOARG_ON_INNER_CLASS
+            val diagnostic = if (useIr) SDCP_ON_INNER_CLASS_ERROR else SDCP_ON_INNER_CLASS
             context.trace.report(diagnostic.on(declaration.reportTarget))
         } else if (DescriptorUtils.isLocal(descriptor)) {
-            val diagnostic = if (useIr) NOARG_ON_LOCAL_CLASS_ERROR else NOARG_ON_LOCAL_CLASS
+            val diagnostic = if (useIr) SDCP_ON_LOCAL_CLASS_ERROR else SDCP_ON_LOCAL_CLASS
             context.trace.report(diagnostic.on(declaration.reportTarget))
         }
 
         val superClass = descriptor.getSuperClassOrAny()
         if (superClass.constructors.none { it.isNoArgConstructor() } && !superClass.hasSpecialAnnotation(declaration)) {
-            context.trace.report(NO_NOARG_CONSTRUCTOR_IN_SUPERCLASS.on(declaration.reportTarget))
+            context.trace.report(NO_SDCP_FUNCION_IN_SUPERCLASS.on(declaration.reportTarget))
         }
     }
 

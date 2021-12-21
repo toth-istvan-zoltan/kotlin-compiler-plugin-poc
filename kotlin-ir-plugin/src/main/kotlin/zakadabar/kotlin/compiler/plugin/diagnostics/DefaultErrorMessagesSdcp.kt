@@ -19,21 +19,21 @@ package zakadabar.kotlin.compiler.plugin.diagnostics
 import org.jetbrains.kotlin.diagnostics.rendering.DefaultErrorMessages
 import org.jetbrains.kotlin.diagnostics.rendering.DiagnosticFactoryToRendererMap
 
-object DefaultErrorMessagesNoArg : DefaultErrorMessages.Extension {
+object DefaultErrorMessagesSdcp : DefaultErrorMessages.Extension {
     private val MAP = DiagnosticFactoryToRendererMap("AnnotationProcessing")
     override fun getMap() = MAP
 
     init {
-        MAP.put(ErrorsNoArg.NO_NOARG_CONSTRUCTOR_IN_SUPERCLASS, "Zero-argument constructor was not found in the superclass")
+        MAP.put(ErrorsSdcp.NO_SDCP_FUNCION_IN_SUPERCLASS, "Sensible defaults function was not found in the superclass")
         MAP.put(
-            ErrorsNoArg.NOARG_ON_INNER_CLASS,
-            "Noarg constructor generation for inner classes is deprecated and will be prohibited soon"
+            ErrorsSdcp.SDCP_ON_INNER_CLASS,
+            "Sensible defaults function generation for inner classes is deprecated and will be prohibited soon"
         )
-        MAP.put(ErrorsNoArg.NOARG_ON_INNER_CLASS_ERROR, "Noarg constructor generation is not possible for inner classes")
+        MAP.put(ErrorsSdcp.SDCP_ON_INNER_CLASS_ERROR, "Sensible defaults function generation is not possible for inner classes")
         MAP.put(
-            ErrorsNoArg.NOARG_ON_LOCAL_CLASS,
-            "Noarg constructor generation for local classes is deprecated and will be prohibited soon"
+            ErrorsSdcp.SDCP_ON_LOCAL_CLASS,
+            "Sensible defaults function generation for local classes is deprecated and will be prohibited soon"
         )
-        MAP.put(ErrorsNoArg.NOARG_ON_LOCAL_CLASS_ERROR, "Noarg constructor generation is not possible for local classes")
+        MAP.put(ErrorsSdcp.SDCP_ON_LOCAL_CLASS_ERROR, "Sensible defaults function generation is not possible for local classes")
     }
 }

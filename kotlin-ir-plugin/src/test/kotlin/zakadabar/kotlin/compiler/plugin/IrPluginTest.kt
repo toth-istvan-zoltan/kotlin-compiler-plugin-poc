@@ -19,8 +19,65 @@ package zakadabar.kotlin.compiler.plugin
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import kotlin.test.assertEquals
-import org.jetbrains.kotlin.compiler.plugin.ComponentRegistrar
 import org.junit.Test
+
+val small = """
+    import kotlin.reflect.KProperty0
+
+    annotation class UiElement
+
+    object A {
+        val b = "Hello"
+    }
+
+    class ZkElement {
+        
+    }
+
+    inline operator fun ZkElement.unaryPlus() {
+    
+    }
+
+    inline operator fun KProperty0<String>.unaryPlus() {
+    
+    }
+
+    fun zke(builder : ZkElement.() -> Unit) : ZkElement = ZkElement().also { it.builder() }
+
+    @UiElement
+    fun a() = zke { }
+
+    @UiElement
+    fun b() {
+        + a()
+        + A::b
+    }
+
+""".trimIndent()
+
+val big = """
+    annotation class UiElement
+
+    fun a() : String = ""
+    
+    @UiElement
+    class A(
+        val s1 : String,
+        var s2 : String,
+        val s3 : String?,
+        var s4 : String?,
+        val s5 : String = "CS5L",
+        var s6 : String = "CS5R",
+        val s7 : String? = null,
+        var s8 : String? = null,
+        val s9 : String? = "CS6L",
+        var s10 : String? = "CS6R",
+        val s11 : String = a()
+    )
+
+    val a1 = A("CS1", "CS2", null, null)
+    val a2 = A("CS1", "CS2", null, null, s7 = a())
+"""
 
 class IrPluginTest {
 
@@ -28,23 +85,7 @@ class IrPluginTest {
     fun `IR plugin success`() {
 
         val result = compile(
-            sourceFile = SourceFile.kotlin(
-                "main.kt",
-                """
-                    annotation class Fancy
-
-                    fun main() {
-                      println(debug())
-                    }
-                    
-                    fun debug() = "Hello, World!"
-
-                    @Fancy
-                    class A(
-                        val b : String
-                    )
-                """
-            )
+            sourceFile = SourceFile.kotlin("main.kt", small)
         )
         assertEquals(KotlinCompilation.ExitCode.OK, result.exitCode)
     }
@@ -56,7 +97,7 @@ fun compile(
     return KotlinCompilation().apply {
         sources = sourceFiles
         useIR = true
-        compilerPlugins = listOf(NoArgComponentRegistrar(), ZakadabarComponentRegistrar())
+        compilerPlugins = listOf(SdcpComponentRegistrar())
         inheritClassPath = true
     }.compile()
 }
