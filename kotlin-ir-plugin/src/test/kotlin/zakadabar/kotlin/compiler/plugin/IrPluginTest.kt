@@ -20,39 +20,61 @@ import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
 import kotlin.test.assertEquals
 import org.junit.Test
+import java.io.File
 
 val small = """
-    import kotlin.reflect.KProperty0
+    annotation class Declarative
 
-    annotation class UiElement
-
-    object A {
-        val b = "Hello"
+    fun d() { 
+        c(12)
+        c(13)
     }
 
-    class ZkElement {
-        
+    @Declarative
+    fun c(a : Int, td : Int = 20) { 
+        println("called c")
     }
 
-    inline operator fun ZkElement.unaryPlus() {
-    
+    fun whatever(callSiteOffset : Int) { 
+         println("whatever: " + callSiteOffset)
     }
+""".trimIndent()
 
-    inline operator fun KProperty0<String>.unaryPlus() {
-    
-    }
+val small2 = """
+//    import kotlin.reflect.KProperty0
+//
+//    annotation class Declarative
+//
+//    object A {
+//        val b = "Hello"
+//    }
+//
+//    class ZkElement {
+//        
+//    }
+//
+//    inline operator fun ZkElement.unaryPlus() {
+//    
+//    }
+//
+//    inline operator fun KProperty0<String>.unaryPlus() {
+//    
+//    }
+//
+//    fun zke(builder : ZkElement.() -> Unit) : ZkElement = ZkElement().also { it.builder() }
+//
+//    @Declarative
+//    fun a() = zke { }
+//
+//    @Declarative
+//    fun b() {
+//        + a()
+//        + A::b
+//    }
 
-    fun zke(builder : ZkElement.() -> Unit) : ZkElement = ZkElement().also { it.builder() }
+      fun d() { c() }
 
-    @UiElement
-    fun a() = zke { }
-
-    @UiElement
-    fun b() {
-        + a()
-        + A::b
-    }
-
+      fun c() {  }
 """.trimIndent()
 
 val big = """
@@ -85,7 +107,7 @@ class IrPluginTest {
     fun `IR plugin success`() {
 
         val result = compile(
-            sourceFile = SourceFile.kotlin("main.kt", small)
+            sourceFile = SourceFile.kotlin("pluginTest.kt", small)
         )
         assertEquals(KotlinCompilation.ExitCode.OK, result.exitCode)
     }
@@ -95,9 +117,10 @@ fun compile(
     sourceFiles: List<SourceFile>
 ): KotlinCompilation.Result {
     return KotlinCompilation().apply {
+        workingDir = File("/Users/tiz/src/sandbox/plugin-test")
         sources = sourceFiles
         useIR = true
-        compilerPlugins = listOf(SdcpComponentRegistrar())
+        compilerPlugins = listOf(DeclarativeComponentRegistrar())
         inheritClassPath = true
     }.compile()
 }

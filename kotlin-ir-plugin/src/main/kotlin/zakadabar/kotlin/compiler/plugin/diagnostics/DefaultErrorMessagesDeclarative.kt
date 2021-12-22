@@ -19,21 +19,21 @@ package zakadabar.kotlin.compiler.plugin.diagnostics
 import org.jetbrains.kotlin.diagnostics.rendering.DefaultErrorMessages
 import org.jetbrains.kotlin.diagnostics.rendering.DiagnosticFactoryToRendererMap
 
-object DefaultErrorMessagesSdcp : DefaultErrorMessages.Extension {
+object DefaultErrorMessagesDeclarative : DefaultErrorMessages.Extension {
     private val MAP = DiagnosticFactoryToRendererMap("AnnotationProcessing")
     override fun getMap() = MAP
 
     init {
-        MAP.put(ErrorsSdcp.NO_SDCP_FUNCION_IN_SUPERCLASS, "Sensible defaults function was not found in the superclass")
+        MAP.put(ErrorsDeclarative.NO_SDCP_FUNCION_IN_SUPERCLASS, "Sensible defaults function was not found in the superclass")
         MAP.put(
-            ErrorsSdcp.SDCP_ON_INNER_CLASS,
+            ErrorsDeclarative.SDCP_ON_INNER_CLASS,
             "Sensible defaults function generation for inner classes is deprecated and will be prohibited soon"
         )
-        MAP.put(ErrorsSdcp.SDCP_ON_INNER_CLASS_ERROR, "Sensible defaults function generation is not possible for inner classes")
+        MAP.put(ErrorsDeclarative.SDCP_ON_INNER_CLASS_ERROR, "Sensible defaults function generation is not possible for inner classes")
         MAP.put(
-            ErrorsSdcp.SDCP_ON_LOCAL_CLASS,
+            ErrorsDeclarative.SDCP_ON_LOCAL_CLASS,
             "Sensible defaults function generation for local classes is deprecated and will be prohibited soon"
         )
-        MAP.put(ErrorsSdcp.SDCP_ON_LOCAL_CLASS_ERROR, "Sensible defaults function generation is not possible for local classes")
+        MAP.put(ErrorsDeclarative.SDCP_ON_LOCAL_CLASS_ERROR, "Sensible defaults function generation is not possible for local classes")
     }
 }

@@ -6,9 +6,9 @@ import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.extensions.StorageComponentContainerContributor
 import org.jetbrains.kotlin.platform.TargetPlatform
 import org.jetbrains.kotlin.platform.jvm.isJvm
-import zakadabar.kotlin.compiler.plugin.diagnostics.SdcpDeclarationChecker
+import zakadabar.kotlin.compiler.plugin.diagnostics.DeclarativeDeclarationChecker
 
-class SdcpComponentContainerContributor(
+class DeclarativeComponentContainerContributor(
     private val annotations: List<String>,
     private val useIr: Boolean,
 ) : StorageComponentContainerContributor {
@@ -18,6 +18,6 @@ class SdcpComponentContainerContributor(
     ) {
         if (!platform.isJvm()) return
 
-        container.useInstance(SdcpDeclarationChecker(annotations, useIr))
+        container.useInstance(DeclarativeDeclarationChecker(annotations, useIr))
     }
 }

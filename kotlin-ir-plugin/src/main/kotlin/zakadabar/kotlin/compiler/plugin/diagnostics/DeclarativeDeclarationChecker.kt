@@ -26,15 +26,15 @@ import org.jetbrains.kotlin.resolve.DescriptorUtils
 import org.jetbrains.kotlin.resolve.checkers.DeclarationChecker
 import org.jetbrains.kotlin.resolve.checkers.DeclarationCheckerContext
 import org.jetbrains.kotlin.resolve.descriptorUtil.getSuperClassOrAny
-import zakadabar.kotlin.compiler.plugin.diagnostics.ErrorsSdcp.*
+import zakadabar.kotlin.compiler.plugin.diagnostics.ErrorsDeclarative.*
 
-internal class SdcpDeclarationChecker(
-    private val sdcpAnnotationFqNames: List<String>,
+internal class DeclarativeDeclarationChecker(
+    private val annotations: List<String>,
     private val useIr: Boolean
 ) : DeclarationChecker, AnnotationBasedExtension {
 
     override fun getAnnotationFqNames(modifierListOwner: KtModifierListOwner?): List<String> =
-        sdcpAnnotationFqNames
+        annotations
 
     override fun check(declaration: KtDeclaration, descriptor: DeclarationDescriptor, context: DeclarationCheckerContext) {
         if (descriptor !is ClassDescriptor || declaration !is KtClass) return

@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.compiler.plugin.CliOptionProcessingException
 import org.jetbrains.kotlin.compiler.plugin.CommandLineProcessor
 import org.jetbrains.kotlin.config.CompilerConfiguration
 
-class SdcpCommandLineProcessor : CommandLineProcessor {
+class DeclarativeCommandLineProcessor : CommandLineProcessor {
     companion object {
         val ANNOTATION_OPTION = CliOption(
             "annotation", "<fqname>", "Annotation qualified names",
@@ -19,7 +19,7 @@ class SdcpCommandLineProcessor : CommandLineProcessor {
     override val pluginOptions = listOf(ANNOTATION_OPTION)
 
     override fun processOption(option: AbstractCliOption, value: String, configuration: CompilerConfiguration) = when (option) {
-        ANNOTATION_OPTION -> configuration.appendList(SdcpConfigurationKeys.ANNOTATION, value)
+        ANNOTATION_OPTION -> configuration.appendList(DeclarativeConfigurationKeys.ANNOTATION, value)
         else -> throw CliOptionProcessingException("Unknown option: ${option.optionName}")
     }
 }

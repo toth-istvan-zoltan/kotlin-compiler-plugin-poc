@@ -6,7 +6,7 @@ package zakadabar.kotlin.compiler.plugin
 
 import org.jetbrains.kotlin.config.CompilerConfigurationKey
 
-object SdcpConfigurationKeys {
+object DeclarativeConfigurationKeys {
     val ANNOTATION: CompilerConfigurationKey<List<String>> =
         CompilerConfigurationKey.create("annotation qualified name")
 }

@@ -23,7 +23,7 @@ import org.jetbrains.kotlin.diagnostics.Errors;
 import static org.jetbrains.kotlin.diagnostics.Severity.ERROR;
 import static org.jetbrains.kotlin.diagnostics.Severity.WARNING;
 
-public interface ErrorsSdcp {
+public interface ErrorsDeclarative {
     DiagnosticFactory0<PsiElement> NO_SDCP_FUNCION_IN_SUPERCLASS = DiagnosticFactory0.create(WARNING);
     DiagnosticFactory0<PsiElement> SDCP_ON_INNER_CLASS       = DiagnosticFactory0.create(WARNING);
     DiagnosticFactory0<PsiElement> SDCP_ON_INNER_CLASS_ERROR  = DiagnosticFactory0.create(ERROR);
@@ -33,7 +33,7 @@ public interface ErrorsSdcp {
     @SuppressWarnings("UnusedDeclaration")
     Object _initializer = new Object() {
         {
-            Errors.Initializer.initializeFactoryNamesAndDefaultErrorMessages(ErrorsSdcp.class, DefaultErrorMessagesSdcp.INSTANCE);
+            Errors.Initializer.initializeFactoryNamesAndDefaultErrorMessages(ErrorsDeclarative.class, DefaultErrorMessagesDeclarative.INSTANCE);
         }
     };
 }

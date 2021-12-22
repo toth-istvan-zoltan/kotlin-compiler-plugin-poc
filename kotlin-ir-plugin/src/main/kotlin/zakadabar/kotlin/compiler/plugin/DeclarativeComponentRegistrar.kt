@@ -2,29 +2,28 @@ package zakadabar.kotlin.compiler.plugin
 
 import com.google.auto.service.AutoService
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
-import org.jetbrains.kotlin.codegen.extensions.ExpressionCodegenExtension
 import org.jetbrains.kotlin.com.intellij.mock.MockProject
 import org.jetbrains.kotlin.com.intellij.openapi.project.Project
 import org.jetbrains.kotlin.compiler.plugin.ComponentRegistrar
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.config.JVMConfigurationKeys
 import org.jetbrains.kotlin.extensions.StorageComponentContainerContributor
+import zakadabar.kotlin.compiler.plugin.DeclarativeConfigurationKeys.ANNOTATION
 
 /**
  * Registers the extensions into the compiler.
  */
 @AutoService(ComponentRegistrar::class)
-class SdcpComponentRegistrar : ComponentRegistrar {
+class DeclarativeComponentRegistrar : ComponentRegistrar {
 
     override fun registerProjectComponents(project: MockProject, configuration: CompilerConfiguration) {
 
-        val annotations = mutableListOf("UiElement") // configuration.get(ANNOTATION).orEmpty().toMutableList()
+        val annotations = configuration.get(ANNOTATION).orEmpty().toMutableList()
+        if (annotations.isEmpty()) annotations += "Declarative"
 
-        if (annotations.isNotEmpty()) {
-            registerSdcpComponents(
-                project, annotations, configuration.getBoolean(JVMConfigurationKeys.IR)
-            )
-        }
+        registerSdcpComponents(
+            project, annotations, configuration.getBoolean(JVMConfigurationKeys.IR)
+        )
     }
 
     fun registerSdcpComponents(project: Project, annotations: List<String>, useIr: Boolean) {
@@ -34,12 +33,12 @@ class SdcpComponentRegistrar : ComponentRegistrar {
 
         StorageComponentContainerContributor.registerExtension(
             project,
-            SdcpComponentContainerContributor(annotations, useIr)
+            DeclarativeComponentContainerContributor(annotations, useIr)
         )
         
         IrGenerationExtension.registerExtension(
             project,
-            SdcpIrGenerationExtension(annotations)
+            DeclarativeIrGenerationExtension(annotations)
         )
     }
 
