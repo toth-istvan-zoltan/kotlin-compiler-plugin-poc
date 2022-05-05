@@ -32,11 +32,15 @@ val small = """
 
     @Declarative
     fun c(a : Int, td : Int = 20) { 
-        println("called c")
+        println("called c(" + a.toString() + ")")
     }
 
     fun whatever(callSiteOffset : Int) { 
-         println("whatever: " + callSiteOffset)
+         println("called whatever: " + callSiteOffset)
+    }
+
+    fun main() {
+        d()
     }
 """.trimIndent()
 
@@ -110,6 +114,16 @@ class IrPluginTest {
             sourceFile = SourceFile.kotlin("pluginTest.kt", small)
         )
         assertEquals(KotlinCompilation.ExitCode.OK, result.exitCode)
+
+        println("%%%%%%%%%%%%%%%%  executing main  %%%%%%%%%%%%%%%%")
+        with(result.classLoader.loadClass("PluginTestKt")) {
+            this.declaredMethods.forEach {
+                if (it.name == "main" && it.parameters.isEmpty()) {
+                   it.invoke(this)
+                }
+            }
+        }
+
     }
 }
 
@@ -117,7 +131,7 @@ fun compile(
     sourceFiles: List<SourceFile>
 ): KotlinCompilation.Result {
     return KotlinCompilation().apply {
-        workingDir = File("/Users/tiz/src/sandbox/plugin-test")
+        workingDir = File("/Users/tiz/src/kotlin-compiler-plugin-poc/plugin-test")
         sources = sourceFiles
         useIR = true
         compilerPlugins = listOf(DeclarativeComponentRegistrar())
