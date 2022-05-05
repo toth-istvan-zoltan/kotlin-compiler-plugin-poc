@@ -43,8 +43,26 @@ class DeclarativeIrTransformer(
             parameters.size == 1 && parameters[0].type == intType
         }
 
+    /**
+     * Adds a new parameter "callSiteOffset" to all declarative functions. This makes
+     * it possible to uniquely identify all calls of a declarative function. For example,
+     * these two calls are identical without the call site information.
+     *
+     * ```kotlin
+     * Button(label = "button label")
+     * Button(label = "button label")
+     * ```
+     *
+     * This function converts the declarative function like this:
+     *
+     * ```kotlin
+     * fun Button(label : String) {  }
+     *
+     * fun Button(label: String, callSiteOffset : Int) {  }
+     * ```
+     */
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
-        if (! isDeclarative(declaration)) return super.visitFunctionNew(declaration)
+        if (!isDeclarative(declaration)) return super.visitFunctionNew(declaration)
 
         declaration.addValueParameter("callSiteOffset", context.irBuiltIns.intType)
 
@@ -53,25 +71,38 @@ class DeclarativeIrTransformer(
         return super.visitFunctionNew(declaration)
     }
 
+    /**
+     * Modifies a function marked with "Declarative" such a way that it first executes
+     * some statements (build by [irDeclarativeEnter]) and then executes the original
+     * statements.
+     */
     private fun irDeclarative(
         function: IrFunction,
     ): IrBlockBody {
         return DeclarationIrBuilder(context, function.symbol).irBlockBody {
-            + irDeclarativeEnter(function)
-            for (statement in function.body !!.statements) + statement
+            +irDeclarativeEnter(function)
+            for (statement in function.body!!.statements) +statement
         }
     }
 
+    /**
+     * Builds pre-processing code for functions marked with the "Declarative" annotation.
+     * For now, it calls the "whatever" function with the call site as the first parameter.
+     */
     private fun IrBuilderWithScope.irDeclarativeEnter(
         function: IrFunction
     ): IrCall {
-        return irCall(funWhatever).also { call ->
-            call.putValueArgument(0, irGet(function.valueParameters.last()))
-        }
+        return irCall(funWhatever)
+            .also { call ->
+                call.putValueArgument(0, irGet(function.valueParameters.last()))
+            }
     }
 
+    /**
+     * Adds the call site offset to a declarative function call.
+     */
     override fun visitCall(expression: IrCall): IrExpression {
-        if (! isDeclarative(expression)) return super.visitCall(expression)
+        if (!isDeclarative(expression)) return super.visitCall(expression)
 
         return IrCallImpl(
             expression.startOffset,
